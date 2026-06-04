@@ -10,7 +10,34 @@ body{font-family:'Segoe UI','Nikosh','SolaimanLipi',system-ui,sans-serif;backgro
 .container{max-width:950px;margin:auto;background:#fff;padding:15px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
 h4{text-align:center;margin:0 0 15px 0;font-size:25px;}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
-select,input{padding:10px 8px;border-radius:8px;border:1px solid #ccc;font-size:28px;flex:1;background:#fff;}
+/* লিস্ট পিকারের ফন্ট - আপডেটেড (কমানো হয়েছে) */
+select,
+select option {
+    padding: 10px 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 18px !important;    /* 24px থেকে 20px এ নামানো হয়েছে */
+    flex: 1;
+    background: #fff;
+}
+
+input {
+    padding: 10px 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 18px !important;               /* 24px থেকে 20px এ নামানো হয়েছে */
+    flex: 1;
+    background: #fff;
+}
+
+@media (max-width: 480px) {
+    select, select option {
+        font-size: 18px !important;  /* মোবাইলে 20px থেকে 18px */
+    }
+    input {
+        font-size: 18px;
+    }
+}
 .table-wrapper{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:15px;border-radius:10px;border:1px solid #e0e0e0;}
 table{width:100%;border-collapse:collapse;min-width:355px;}
 th,td{border:1px solid #ddd;padding:8px 5px;text-align:center;}
@@ -22,7 +49,7 @@ td{word-break:keep-all;white-space:nowrap;}
 .delay{color:red;font-weight:bold;}
 .ok{color:green;font-weight:bold;}
 .current{background:#fff3cd;font-weight:bold;}
-.note{margin-top:12px;padding:8px;background:#e8f0fe;border-radius:6px;font-size:17px;text-align:center;color:green;font-weight:bold;}
+.note{margin-top:12px;padding:8px;background:#e8f0fe;border-radius:6px;font-size:16px;text-align:center;color:green;font-weight:bold;}
 @media (max-width:480px){body{padding:8px;}.container{padding:10px;}th,td{padding:5px 3px;}th{font-size:17px;}td{font-size:18px;}select,input{font-size:13px;padding:8px 6px;}h4{font-size:16px;}th:nth-child(1),td:nth-child(1){width:38%;min-width:85px;}th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3),th:nth-child(4),td:nth-child(4){width:20%;min-width:60px;}}
 </style>
 </head>
