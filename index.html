@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<title>ট্রেন ডিলে সিস্টেম</title>
+<title>Train Delay Schedule</title>
 <style>
 *{box-sizing:border-box;}
 body{font-family:'Segoe UI','Nikosh','SolaimanLipi',system-ui,sans-serif;background:#f4f6f8;padding:12px;margin:0;}
 .container{max-width:950px;margin:auto;background:#fff;padding:15px;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
-h4{text-align:center;margin:0 0 15px 0;font-size:25px;}
+h4{text-align:center;margin:0 0 15px 0;font-size:36px;}
 .row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
 /* লিস্ট পিকারের ফন্ট - আপডেটেড (কমানো হয়েছে) */
 select,
@@ -50,8 +50,8 @@ td{word-break:keep-all;white-space:nowrap;}
 .delay{color:red;font-weight:bold;}
 .ok{color:green;font-weight:bold;}
 .current{background:#fff3cd;font-weight:bold;}
-.note{margin-top:12px;padding:8px;background:#e8f0fe;border-radius:6px;font-size:16px;text-align:center;color:green;font-weight:bold;}
-@media (max-width:480px){body{padding:8px;}.container{padding:10px;}th,td{padding:5px 3px;}th{font-size:17px;}td{font-size:18px;}select,input{font-size:13px;padding:8px 6px;}h4{font-size:16px;}th:nth-child(1),td:nth-child(1){width:38%;min-width:85px;}th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3),th:nth-child(4),td:nth-child(4){width:20%;min-width:60px;}}
+.note{margin-top:12px;padding:8px;background:#e8f0fe;border-radius:6px;font-size:17px;text-align:center;color:#555;}
+@media (max-width:480px){body{padding:8px;}.container{padding:10px;}th,td{padding:5px 3px;}th{font-size:17px;}td{font-size:16px;}select,input{font-size:13px;padding:8px 6px;}h4{font-size:16px;}th:nth-child(1),td:nth-child(1){width:38%;min-width:85px;}th:nth-child(2),td:nth-child(2),th:nth-child(3),td:nth-child(3),th:nth-child(4),td:nth-child(4){width:20%;min-width:60px;}}
 </style>
 </head>
 <body>
@@ -64,7 +64,9 @@ td{word-break:keep-all;white-space:nowrap;}
 </div>
 <div class="table-wrapper">
 <table>
-<thead><tr><th>স্টেশন</th><th>মূল সময়</th><th>আপডেট</th><th>বিলম্ব</th></tr></thead>
+<thead>
+<th>স্টেশন</th><th>মূল সময়</th><th>আপডেট</th><th>বিলম্ব</th>
+</thead>
 <tbody id="result"></tbody>
 </table>
 </div>
@@ -74,18 +76,74 @@ td{word-break:keep-all;white-space:nowrap;}
 const stationBangla={"CTG":"চট্টগ্রাম","CGJ":"চট্টগ্রাম জংশন","JTLA":"ঝাউতলা","CTGP":"পলিটেকনিক","SLHR":"ষোলশহর","JNHT":"জানআলীহাট","GMDI":"গোমদন্ডী","BNGR":"বেঙ্গুরা","DLGT":"ধলঘাট","KNMN":"খাঁনমোহনা","PTW":"পটিয়া","CKSL":"চক্রশালা","KRNA":"খরনা","KNNR":"কাঞ্চননগর","KNHT":"খাঁনহাট","HSH":"হাসিমপুর","DHZ":"দোহাজারী","SKNA":"সাতকানিয়া","LGRA":"লোহাগাড়া","HRBG":"হারবাং","CKR":"চকরিয়া","DLZ":"ডুলাহাজারা","ISB":"ইসলামাবাদ","RMU":"রামু","CXB":"কক্সবাজার"};
 function getBanglaStation(e){return stationBangla[e]||e;}
 const trainData={"814":[["CTG","04:20"],["CGJ","04:25"],["JTLA","04:27"],["CTGP","04:28"],["SLHR","04:30"],["JNHT","04:39"],["GMDI","04:45"],["BNGR","04:50"],["DLGT","04:54"],["KNMN","04:57"],["PTW","05:00"],["CKSL","05:03"],["KRNA","05:05"],["KNNR","05:09"],["KNHT","05:11"],["HSH","05:15"],["DHZ","05:19"],["SKNA","05:27"],["LGRA","05:37"],["HRBG","06:00"],["CKR","06:09"],["DLZ","06:28"],["ISB","06:42"],["RMU","06:56"],["CXB","07:20"]],"816":[["CTG","11:40"],["CGJ","11:45"],["JTLA","11:47"],["CTGP","11:49"],["SLHR","11:51"],["JNHT","12:00"],["GMDI","12:07"],["BNGR","12:12"],["DLGT","12:16"],["KNMN","12:19"],["PTW","12:22"],["CKSL","12:25"],["KRNA","12:27"],["KNNR","12:31"],["KNHT","12:33"],["HSH","12:37"],["DHZ","12:42"],["SKNA","12:50"],["LGRA","13:00"],["HRBG","13:24"],["CKR","13:34"],["DLZ","13:54"],["ISB","14:08"],["RMU","14:22"],["CXB","14:40"]],"813":[["CXB","12:30"],["RMU","12:42"],["ISB","12:56"],["DLZ","13:10"],["CKR","13:36"],["HRBG","13:49"],["LGRA","14:12"],["SKNA","14:22"],["DHZ","14:30"],["HSH","14:33"],["KNHT","14:36"],["KNNR","14:38"],["KRNA","14:42"],["CKSL","14:44"],["PTW","14:47"],["KNMN","14:50"],["DLGT","14:53"],["BNGR","14:57"],["GMDI","15:02"],["JNHT","15:10"],["SLHR","15:20"],["CTGP","15:22"],["JTLA","15:23"],["CGJ","15:27"],["CTG","16:00"]],"815":[["CXB","19:45"],["RMU","19:56"],["ISB","20:10"],["DLZ","20:24"],["CKR","20:43"],["HRBG","20:52"],["LGRA","21:15"],["SKNA","21:25"],["DHZ","21:33"],["HSH","21:38"],["KNHT","21:42"],["KNNR","21:44"],["KRNA","21:48"],["CKSL","21:50"],["PTW","21:53"],["KNMN","21:56"],["DLGT","21:59"],["BNGR","22:03"],["GMDI","22:08"],["JNHT","22:14"],["SLHR","22:22"],["CTGP","22:24"],["JTLA","22:25"],["CGJ","22:28"],["CTG","23:15"]],"824":[["CXB","20:00"],["RMU","20:17"],["ISB","20:33"],["DLZ","20:50"],["CKR","21:14"],["HRBG","21:28"],["LGRA","21:54"],["SKNA","22:07"],["DHZ","22:20"],["HSH","22:26"],["KNHT","22:30"],["KNNR","22:32"],["KRNA","22:36"],["CKSL","22:38"],["PTW","22:44"],["KNMN","22:49"],["DLGT","22:52"],["BNGR","22:56"],["GMDI","23:01"],["JNHT","23:12"],["SLHR","23:25"],["CTGP","23:29"],["JTLA","23:30"],["CGJ","23:35"],["CTG","23:50"]],"822":[["CXB","10:00"],["RMU","10:15"],["ISB","10:34"],["DLZ","10:53"],["CKR","11:17"],["HRBG","11:32"],["LGRA","12:02"],["SKNA","12:17"],["DHZ","12:30"],["HSH","12:36"],["KNHT","12:40"],["KNNR","12:42"],["KRNA","12:46"],["CKSL","12:48"],["PTW","12:54"],["KNMN","12:59"],["DLGT","13:02"],["BNGR","13:06"],["GMDI","13:11"],["JNHT","13:22"],["SLHR","13:35"],["CTGP","13:39"],["JTLA","13:40"],["CGJ","13:45"],["CTG","14:10"]],"823":[["CTG","15:10"],["CGJ","15:15"],["JTLA","15:17"],["CTGP","15:18"],["SLHR","15:23"],["JNHT","15:33"],["GMDI","15:42"],["BNGR","15:49"],["DLGT","15:53"],["KNMN","15:56"],["PTW","16:02"],["CKSL","16:05"],["KRNA","16:07"],["KNNR","16:11"],["KNHT","16:13"],["HSH","16:17"],["DHZ","16:24"],["SKNA","16:37"],["LGRA","16:52"],["HRBG","17:20"],["CKR","17:34"],["DLZ","17:58"],["ISB","18:17"],["RMU","18:36"],["CXB","19:00"]],"821":[["CTG","05:50"],["CGJ","05:55"],["JTLA","05:57"],["CTGP","05:58"],["SLHR","06:02"],["JNHT","06:16"],["GMDI","06:25"],["BNGR","06:32"],["DLGT","06:36"],["KNMN","06:39"],["PTW","06:42"],["CKSL","06:45"],["KRNA","06:47"],["KNNR","06:51"],["KNHT","06:53"],["HSH","06:57"],["DHZ","07:06"],["SKNA","07:19"],["LGRA","07:32"],["HRBG","07:58"],["CKR","08:12"],["DLZ","08:35"],["ISB","08:54"],["RMU","09:08"],["CXB","09:25"]]};
+
+// ==== নতুন ফাংশন: ট্রেনের টার্মিনাল স্টেশন ও তার ছাড়ার সময় বের করে ====
+function getTerminalStationAndTime(trainNumber) {
+    const route = trainData[trainNumber];
+    if (!route || route.length === 0) return null;
+    // ধরে নিচ্ছি route[0] হলো টার্মিনাল (যাত্রার প্রথম স্টেশন)
+    const terminalStationCode = route[0][0];
+    const terminalTime = route[0][1];
+    return { code: terminalStationCode, time: terminalTime };
+}
+
+// টাইমার ইনপুট আপডেট করার ফাংশন (টার্মিনাল সময় বসাবে)
+function updateTimerToTerminalTime() {
+    const selectedTrain = trainSelect.value;
+    const terminalInfo = getTerminalStationAndTime(selectedTrain);
+    if (terminalInfo) {
+        actualTimeInput.value = terminalInfo.time;
+    } else {
+        // কোনো টার্মিনাল না পেলে ইউজারের আগের মান বা কিছু ডিফল্ট
+        if (!actualTimeInput.value) actualTimeInput.value = "12:00";
+    }
+}
+
 function toMin(t){let[h,m]=t.split(":").map(Number);return h*60+m;}
 function formatAmPm(m){let d=((m%1440)+1440)%1440,h=Math.floor(d/60),min=d%60,ampm=h>=12?"pm":"am",h12=h%12;if(h12===0)h12=12;return h12+":"+(min<10?"0"+min:min)+" "+ampm;}
 function formatDelay(d){let s=d>=0?"+":"-",a=Math.abs(d),h=Math.floor(a/60),m=a%60;return s+h+":"+(m<10?"0"+m:m);}
-function calculate(){let train=trainSelect.value,station=stationSelect.value,actual=toMin(actualTimeInput.value);if(isNaN(actual))return;let data=trainData[train],idx=data.findIndex(s=>s[0]===station);if(idx===-1){result.innerHTML='<tr><td colspan="4">স্টেশন পাওয়া যায়নি!</td></tr>';return;}
-let delay=actual-toMin(data[idx][1]),html="";
-for(let i=idx;i<data.length;i++){let org=toMin(data[i][1]),upd=org+delay,cur=i===idx;html+=`<tr class="${cur?'current':''}"><td>${getBanglaStation(data[i][0])}${cur?'':''}</td><td>${formatAmPm(org)}</td><td>${formatAmPm(upd)}</td><td class="${delay>=0?'delay':'ok'}">${formatDelay(delay)}</td></tr>`;}
-result.innerHTML=html;}
+function calculate(){
+    let train=trainSelect.value,station=stationSelect.value,actual=toMin(actualTimeInput.value);
+    if(isNaN(actual))return;
+    let data=trainData[train],idx=data.findIndex(s=>s[0]===station);
+    if(idx===-1){result.innerHTML='<tr><td colspan="4">স্টেশন পাওয়া যায়নি!</td></tr>';return;}
+    let delay=actual-toMin(data[idx][1]),html="";
+    for(let i=idx;i<data.length;i++){let org=toMin(data[i][1]),upd=org+delay,cur=i===idx;
+    html+=`<tr class="${cur?'current':''}"><td>${getBanglaStation(data[i][0])}${cur?'':''}</td><td>${formatAmPm(org)}</td><td>${formatAmPm(upd)}</td><td class="${delay>=0?'delay':'ok'}">${formatDelay(delay)}</td></tr>`;}
+    result.innerHTML=html;
+}
+
 const trainSelect=document.getElementById("trainSelect"),stationSelect=document.getElementById("stationSelect"),actualTimeInput=document.getElementById("actualTime"),result=document.getElementById("result");
-function loadTrains(){trainSelect.innerHTML="";for(let t in trainData)trainSelect.innerHTML+=`<option value="${t}">ট্রেন ${t}</option>`;}
-function loadStations(){let t=trainSelect.value;stationSelect.innerHTML="";trainData[t].forEach(s=>{stationSelect.innerHTML+=`<option value="${s[0]}">${getBanglaStation(s[0])}</option>`;});}
-trainSelect.onchange=()=>{loadStations();calculate();};stationSelect.onchange=calculate;actualTimeInput.onchange=calculate;actualTimeInput.oninput=calculate;
-loadTrains();loadStations();calculate();
+
+function loadTrains(){
+    trainSelect.innerHTML="";
+    for(let t in trainData) trainSelect.innerHTML+=`<option value="${t}">ট্রেন ${t}</option>`;
+}
+function loadStations(){
+    let t=trainSelect.value;
+    stationSelect.innerHTML="";
+    trainData[t].forEach(s=>{stationSelect.innerHTML+=`<option value="${s[0]}">${getBanglaStation(s[0])}</option>`;});
+}
+
+// ট্রেন পরিবর্তনের ঘটনা: (1) স্টেশন লিস্ট লোড হবে, (2) টাইমার টার্মিনালের সময়ে সেট হবে, (3) ক্যালকুলেশন চালাবে
+trainSelect.onchange=()=>{
+    loadStations();          // নতুন ট্রেনের স্টেশন তালিকা
+    updateTimerToTerminalTime();  // 🔹 টাইমারে টার্মিনাল স্টেশনের ছাড়ার সময় বসানো
+    calculate();
+};
+
+// স্টেশন পরিবর্তন করলেও শুধু ক্যালকুলেশন চলবে, টাইমার অটো চেঞ্জ হবে না (কারণ টাইমার ব্যবহারকারীর দেওয়া সময়)
+stationSelect.onchange=calculate;
+
+// ম্যানুয়ালি টাইমার পরিবর্তন করলে সেটি সম্মান করবে
+actualTimeInput.onchange=calculate;
+actualTimeInput.oninput=calculate;
+
+// পেজ লোডে প্রথম ট্রেনের টার্মিনাল সময় বসানো (এবং বাকি সব সেটআপ)
+loadTrains();
+loadStations();
+updateTimerToTerminalTime();  // 🔹 শুরুতে ডিফল্ট টাইমার সেট
+calculate();
 </script>
 </body>
 </html>
